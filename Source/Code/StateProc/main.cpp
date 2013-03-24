@@ -13,11 +13,9 @@ using namespace cv;
 
 // *** GLOBALS ***
 
-vector<
-
 bool initialize();
-void extract(Mat shape, Mat src, Mat axes, Mat *trans, Mat *rot);
-void mapShape(Mat *shape, Mat up);
+void extract(Mat dest, Mat src, Mat *trans, Mat *rot);
+void mapdest(Mat *dest, Mat up);
 
 int main()
 {
@@ -28,15 +26,17 @@ int main()
 
     // compute average z direction
 
-    for(int i=0; i < traj.rows; i++)
-    {
 
-    }
 
     return 0;
 }
 
-void extract(Mat shape, Mat src, Mat axes, Mat *trans, Mat *rot)
+bool initialize()
+{
+    return true;
+}
+
+void extract(Mat dest, Mat src, Mat *trans, Mat *rot)
 {
     int N = src.rows;
 
@@ -60,7 +60,7 @@ void extract(Mat shape, Mat src, Mat axes, Mat *trans, Mat *rot)
 
     for(int i=0; i < N; i++)
     {
-        transpose(shape.row(i),x1);
+        transpose(dest.row(i),x1);
         x2 = src.row(i);
 
         C += x2*x1;
@@ -75,16 +75,15 @@ void extract(Mat shape, Mat src, Mat axes, Mat *trans, Mat *rot)
     *trans = cent;
 }
 
-void mapShape(Mat *shape, Mat up)
+void mapdest(Mat *dest, Mat up)
 {
     // rotate z onto up
 
-    Mat axes = Mat::zeros(3,3,CV_32FC1);
-    Mat *trans, *rot;
+    Mat *trans = 0, *rot = 0;
 
-    extract(*shape, up, axes, trans, rot);
+    extract(*dest, up, trans, rot);
 
-    // map shape by rotation
+    // map dest by rotation
 
-    *shape = (*rot)*(*shape);
+    *dest = (*rot)*(*dest);
 }
