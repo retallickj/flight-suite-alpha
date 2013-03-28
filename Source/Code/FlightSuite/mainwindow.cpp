@@ -218,7 +218,27 @@ void MainWindow::on_camcal_pb_run_clicked()
 {
     // run Camera Calibration code
 
-    //QString exec_path = settings->value("exec/triang").toString();
+    QString exec_path = settings->value("exec/camcal").toString();
+    QStringList args;
+
+    if(ui->camcal_vptext->toPlainText().isEmpty())
+        return;
+
+    QStringList sl1 = ui->camcal_v1text->toPlainText().split("\n");
+    QStringList sl2 = ui->camcal_v2text->toPlainText().split("\n");
+    QStringList sl3 = ui->camcal_vptext->toPlainText().split("\n");
+
+    args.append(QString::number(sl1.size()));
+    args.append(QString::number(sl2.size()));
+    args.append(QString::number(sl3.size()));
+
+    args.append(sl1);
+    args.append(sl2);
+    args.append(sl3);
+
+    int status = qproc->execute(exec_path,args);
+
+    std::cout << "Execution Status: " << status << std::endl;
 }
 
 
@@ -342,7 +362,28 @@ void MainWindow::on_proc_pb_run_clicked()
 {
     // Run Processing code
 
-    //QString exec_path = settings->value("exec/triang").toString();
+    QString exec_path = settings->value("exec/proc").toString();
+    QStringList args;
+
+    if(ui->proc_line_trin->text().isEmpty())
+        return;
+
+    QString write_path;
+
+    if(ui->proc_line_out->text().isEmpty())
+        write_path = "./output";
+    else
+        write_path = ui->proc_line_out->text();
+
+
+    args.append(write_path);
+    args.append(ui->proc_line_trin->text());
+
+    int status = qproc->execute(exec_path,args);
+
+    std::cout << "Execution Status: " << status << std::endl;
+
+
 }
 
 

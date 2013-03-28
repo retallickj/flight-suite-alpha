@@ -1,6 +1,6 @@
 #include "plotcore.h"
 
-PlotCore::PlotCore(string winname, int width, int height, bool cycleSeries)
+PlotCore::PlotCore(string winname, int width, int height, int *l1, bool cycleSeries)
 {
     this->winname = winname;
 
@@ -17,6 +17,8 @@ PlotCore::PlotCore(string winname, int width, int height, bool cycleSeries)
 
     this->l1 = -1;
     this->l2 = -1;
+
+    this->p_l1=l1;
 
     this->maxX = 0;
 
@@ -720,7 +722,7 @@ void PCG::mouseCallback(int event, int x, int y, int flag, void *param)
     case EVENT_LBUTTONDOWN:
         cout << "LBD" << endl;
         pc->l1 = x;
-
+        *pc->p_l1 = (x-pc->ll)*pc->plots.at(pc->currentPlot)->xscale;
         break;
     case EVENT_LBUTTONUP:
         cout << "LBU" << endl;

@@ -93,7 +93,7 @@ struct Plot{
 class PlotCore
 {
 public:
-    PlotCore(string winname, int width, int height, bool cycleSeries=false);
+    PlotCore(string winname, int width, int height, int *l1=0, bool cycleSeries=false);
     ~PlotCore();
 
     void addPlot();
@@ -155,6 +155,8 @@ private:
 
     bool cycleSeries;
     int* maxX;
+
+    int *p_l1;
 
     vector<int*> hlines;
 

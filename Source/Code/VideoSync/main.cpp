@@ -4,7 +4,7 @@
 #define WRITE_ARG 1
 #define FEED_ARG_OFFSET 1
 
-#define RECT_MIN 1
+#define RECT_MIN 0
 
 #define TRIGPLOT_NAME "trigger-plotting"
 #define SIGPLOT_NAME "signal-plotting"

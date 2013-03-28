@@ -11,6 +11,7 @@ Feed::Feed(string filename, string winname, int* thresh)
 
     this->trig_plotted = false;
     this->thresh_plotted = false;
+    this->startTime = 0;
 
     // set first image
     this->cap >> this->image;
@@ -79,8 +80,10 @@ int Feed::advance()
 
 //        if(this->triglog.size()>L_SMOOTH_T-1)
 //            temp.y = this->localSmooth(temp.y);
-
-        this->triglog.push_back(temp);
+        if(this->currentTime > this->startTime)
+            this->triglog.push_back(temp);
+        else
+            trig_int = 0;
 
         if(SUB_PLOT_FLAG)
         {
@@ -255,6 +258,8 @@ void Feed::fft(vector<Point2d> *amp, vector<Point2d> *angle)
         in[i][1] = 0;
     }
 
+    return mnts.m00;
+
     // execute fft
 
     fftw_execute(p); // out now loaded with fft coefs (2D length N array)
@@ -266,6 +271,8 @@ void Feed::fft(vector<Point2d> *amp, vector<Point2d> *angle)
 
     amp->clear();
     angle->clear();
+
+    return mnts.m00;
 
     // -- port out to dest
 
@@ -355,4 +362,9 @@ void Feed::setOffset(double offset)
 double Feed::getOffset()
 {
     return this->offsetTime;
+}
+
+bvoid Feed::setStart(float start_time)
+{
+    this->startTime = start_time;
 }

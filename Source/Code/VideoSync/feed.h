@@ -94,6 +94,8 @@ public:
 
     void fft(vector<Point2d> *amp, vector<Point2d> *angle);
 
+    void setStart(float start_time);
+
 private:
 
     // *** Private Methods ***
@@ -121,6 +123,8 @@ private:
     double currentFrame;
     double currentTime;
     double offsetTime;
+
+    double startTime;
 
     string winname;
 

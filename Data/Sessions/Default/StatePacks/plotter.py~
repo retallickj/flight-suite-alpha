@@ -1,0 +1,44 @@
+from matplotlib import pylab as plt
+
+filepath = "./test1.txt"
+
+def loadFile(filename):
+
+	fp = open(filepath);
+
+	yaw = []
+	pitch = []
+	roll= []
+
+	x = []
+	y = []
+	z = []
+
+	for line in fp:
+		vals = line.split('\t')
+		yaw.append(float(vals[0]))
+		pitch.append(float(vals[1]))
+		roll.append(float(vals[2]))
+		x.append(float(vals[3]))
+		y.append(float(vals[4]))
+		z.append(float(vals[5]))
+
+	return yaw, pitch, roll, x, y, z
+
+
+def run()
+
+	yaw, pitch, roll, x, y, z = loadFile(filepath)
+
+	plt.plot(x, 'ro')
+	plt.plot(y, 'bo')
+	plt.plot(z, 'go')
+
+	plt.show()
+
+	plt.plot(yaw, 'ro')
+	plt.plot(pitch, 'bo')
+	plt.plot(roll, 'go')
+
+	plt.show()
+
