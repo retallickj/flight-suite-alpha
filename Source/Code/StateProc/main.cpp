@@ -15,8 +15,6 @@ using namespace cv;
 // *** GLOBAL CONSTANTS ***
 
 #define NUM_POINTS 4
-#define PI 3.1415926
-#define INV_THRESH 1
 
 namespace BODY{
 
@@ -243,15 +241,20 @@ void extract(Mat source, Mat dest, Mat *trans, Mat *rot, bool zero)
     Mat w, u, vt;
     SVD::compute(C, w, u, vt);
 
-    *rot = u*vt;
+    Mat r1 = u*vt;
+
+    Mat factor = Mat::eye(3,3,CV_32F);
+    factor.at<float>(2,2) = determinant(r1);
+
+    *rot = u*factor*vt;
     *trans = cent1-cent2;
 
 //    //cout << "Trans: " << *trans << endl;
 
-//    //cout << "Source: \n" << src << endl;
-//    //cout << "Dest: \n" << dest << endl;
-//    //cout << "Rot: \n" << *rot << endl;
-//    //cout << "Back: \n" << ((*rot)*src.t()).t() << endl;
+//    cout << "\n\n\nSrc: \n" << src << endl;
+    cout << "\n\n\nDst: \n" << dst << endl;
+    cout << "Rot: \n" << *rot << endl;
+    cout << "Back: \n" << ((*rot)*src.t()).t() << endl;
 }
 
 bool readTriang()
@@ -350,8 +353,6 @@ float lenMat(Mat src)
     return sqrt(length);
 }
 
-float l_st[3] = {2*PI,2*PI,2*PI};
-
 Mat getAtt(Mat R)
 {
     float st[3];
@@ -368,26 +369,6 @@ Mat getAtt(Mat R)
     // compute roll
 
     st[2] = atan2(R.at<float>(2,1), R.at<float>(2,2));
-
-    // inversion corrections
-
-    float diff;
-
-    for(int i=0; i < 3; i++)
-    {
-        if(l_st[i] > PI)
-            l_st[i] = st[i];
-
-        diff = l_st[i] - st[i];
-
-        if(abs(diff) > INV_THRESH) // inversion
-        {
-            st[i] += PI*( l_st[i]>0 ? 1 : -1);
-        }
-
-        l_st[i] = st[i];
-    }
-
 
     att.at<float>(0,0) = st[0];
     att.at<float>(0,1)  = st[1];
