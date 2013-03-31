@@ -164,6 +164,10 @@ private slots:
 
     void on_statepack_path_line_editingFinished();
 
+    void on_vsync_line_freq_editingFinished();
+
+    void on_vsync_cb_freq_clicked();
+
 private:
 
     // helper functions for clean build

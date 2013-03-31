@@ -9,9 +9,15 @@ Feed::Feed(string filename, string winname, int* thresh)
     this->filepath = filename;
     this->winname = winname;
 
+    if(!cap.isOpened())
+    {
+        cerr << "Failed to open file..." << filename;
+        return;
+    }
+
     this->trig_plotted = false;
     this->thresh_plotted = false;
-    this->startTime = 0;
+    this->timeBounds = 0;
 
     // set first image
     this->cap >> this->image;
@@ -80,10 +86,8 @@ int Feed::advance()
 
 //        if(this->triglog.size()>L_SMOOTH_T-1)
 //            temp.y = this->localSmooth(temp.y);
-        if(this->currentTime > this->startTime)
-            this->triglog.push_back(temp);
-        else
-            trig_int = 0;
+
+        this->triglog.push_back(temp);
 
         if(SUB_PLOT_FLAG)
         {
@@ -105,7 +109,7 @@ int Feed::advance()
                 return 1;
             }
 
-            if(this->logging)
+            if(this->logging && (temp.x >= this->timeBounds->x))
             {
                 sig_int = this->calcInt(false,  true);
 
@@ -258,7 +262,6 @@ void Feed::fft(vector<Point2d> *amp, vector<Point2d> *angle)
         in[i][1] = 0;
     }
 
-    return mnts.m00;
 
     // execute fft
 
@@ -272,7 +275,6 @@ void Feed::fft(vector<Point2d> *amp, vector<Point2d> *angle)
     amp->clear();
     angle->clear();
 
-    return mnts.m00;
 
     // -- port out to dest
 
@@ -364,7 +366,7 @@ double Feed::getOffset()
     return this->offsetTime;
 }
 
-bvoid Feed::setStart(float start_time)
+void Feed::setTBounds(Point2d* time_bounds)
 {
-    this->startTime = start_time;
+    this->timeBounds = time_bounds;
 }

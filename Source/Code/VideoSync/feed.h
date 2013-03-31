@@ -11,7 +11,7 @@
 #include <iostream>
 #include <sstream>
 
-#define F_0 10
+
 #define LOCK_IN_T 60
 #define LOCK_IN_SCALE 100000
 
@@ -94,7 +94,7 @@ public:
 
     void fft(vector<Point2d> *amp, vector<Point2d> *angle);
 
-    void setStart(float start_time);
+    void setTBounds(Point2d* time_bounds);
 
 private:
 
@@ -124,7 +124,7 @@ private:
     double currentTime;
     double offsetTime;
 
-    double startTime;
+    Point2d *timeBounds;
 
     string winname;
 

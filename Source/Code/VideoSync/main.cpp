@@ -2,7 +2,8 @@
 #include "plotcore.h"
 
 #define WRITE_ARG 1
-#define FEED_ARG_OFFSET 1
+#define FREQ_ARG 2
+#define FEED_ARG_OFFSET 2
 
 #define RECT_MIN 0
 
@@ -41,7 +42,10 @@ vector<bool> plays;
 string write_name;
 
 int num_feeds;
+float sig_freq;
+
 int delay_time = 33;
+float time_factor = 1;
 
 Point rect_start;
 Point rect_end;
@@ -52,8 +56,14 @@ PlotCore *pc_fft;
 
 bool triggerSelect;
 
+int currentFeed = 0;
+
 vector<int*> thresh_ints;
 int* max_fft = new int(FFT_MAX_DEFAULT);
+
+vector<Point2d*> trig_lines;
+vector<Point2d*> sig_lines;
+vector<Point2d*> fft_lines;
 
 // *** GENERAL FUNCTIONS ***
 
@@ -91,7 +101,7 @@ int main(int argc, char** argv)
 
     // wait for start
 
-    while((char) waitKey(5) != 's');
+    while((char) waitKey(5) != START_STOPKEY);
 
     // loop body
 
@@ -113,7 +123,7 @@ int main(int argc, char** argv)
         pc_sig->updateAll(showSig);
         pc_fft->updateAll(showFFT);
 
-        option = (char) waitKey(delay_time);
+        option = (char) waitKey(delay_time / time_factor);
 
         switch(option)
         {
@@ -148,57 +158,57 @@ int main(int argc, char** argv)
             if(showTrig)
             {
                 pc_trig->hide();
-                cout << "Disabling Trigger Plotting...\n";
+                cout << "\nDisabling Trigger Plotting...\n";
                 showTrig= false;
             }
             else
             {
                 pc_trig->show(&thresh_ints, TRIGGER_WEIGHT_MAX);
-                cout << "Enabling Trigger Plotting...\n";
+                cout << "\nEnabling Trigger Plotting...\n";
                 showTrig=true;
                 pc_trig->updateAll(showTrig);
-                pc_trig->changePlot(0,showTrig);
+                pc_trig->changePlot(currentFeed,showTrig);
             }
             break;
         case PLOT_SIGKEY: // set-unset plotting
             if(showSig)
             {
                 pc_sig->hide();
-                cout << "Disabling Signal Plotting...\n";
+                cout << "\nDisabling Signal Plotting...\n";
                 showSig= false;
             }
             else
             {
                 pc_sig->show();
-                cout << "Enabling Signal Plotting...\n";
+                cout << "\nEnabling Signal Plotting...\n";
                 showSig=true;
                 pc_sig->updateAll(showSig);
-                pc_sig->changePlot(0,showSig);
+                pc_sig->changePlot(currentFeed,showSig);
             }
             break;
         case PLOT_FFTKEY: // set-unset plotting
             if(showFFT)
             {
                 pc_fft->hide();
-                cout << "Disabling FFT Plotting...\n";
+                cout << "\nDisabling FFT Plotting...\n";
                 showFFT= false;
             }
             else
             {
                 pc_fft->show(0,0,max_fft, FFT_MAX_LIM);
-                cout << "Enabling FFT Plotting...\n";
+                cout << "\nEnabling FFT Plotting...\n";
                 showFFT=true;
                 pc_fft->updateAll(showFFT);
-                pc_fft->changePlot(0, showFFT);
+                pc_fft->changePlot(currentFeed, showFFT);
             }
             break;
         case RIGHTKEY:
-            pc_trig->shiftPlot(true, showTrig);
+            currentFeed = pc_trig->shiftPlot(true, showTrig);
             pc_sig->shiftPlot(true, showSig);
             pc_fft->shiftPlot(true, showFFT);
             break;
         case LEFTKEY:
-            pc_trig->shiftPlot(false, showTrig);
+            currentFeed = pc_trig->shiftPlot(false, showTrig);
             pc_sig->shiftPlot(false, showSig);
             pc_fft->shiftPlot(false, showFFT);
             break;
@@ -255,6 +265,10 @@ bool initiate(int argc, char** argv)
 
     write_name = argv[WRITE_ARG];
 
+    // set signalling frequency
+
+    sig_freq = strtof(argv[FREQ_ARG], NULL);
+
     // set PlotCore
 
     pc_trig = new PlotCore(TRIGPLOT_NAME, PLOT_WIDTH, PLOT_HEIGHT);
@@ -275,11 +289,18 @@ bool initiate(int argc, char** argv)
         feeds.push_back(new Feed(filepaths.at(i), winnames.at(i), thresh_ints.at(i)));
         fps = feeds.at(i)->start();
         setMouseCallback(winnames.at(i), mouseCallback, (void *) feeds.at(i));
+
         plays.push_back(true);
 
-        pc_trig->addPlot();
-        pc_sig->addPlot();
-        pc_fft->addPlot();
+        // setup vertical lines
+
+        trig_lines.push_back(new Point2d(-1,-1));
+        sig_lines.push_back(new Point2d(-1,-1));
+        fft_lines.push_back(new Point2d(-1,-1));
+
+        pc_trig->addPlot(trig_lines.at(i));
+        pc_sig->addPlot(sig_lines.at(i));
+        pc_fft->addPlot(fft_lines.at(i));
 
         pc_trig->addSeries(i,feeds.at(i)->getTrigLog());
         pc_sig->addSeries(i,feeds.at(i)->getSigLog());
@@ -287,7 +308,8 @@ bool initiate(int argc, char** argv)
         pc_fft->addSeries(i,feeds.at(i)->getfft_amp(), "amplitude");
         pc_fft->addSeries(i,feeds.at(i)->getfft_arg(), "phase", PCG::BLUE);
 
-        pc_trig->addHLine(thresh_ints.at(i));
+        feeds.at(i)->setTBounds(trig_lines.at(i));
+        pc_trig->addHLine(i,thresh_ints.at(i));
 
         if(delay_time > 1000/fps)
             delay_time = 1000/fps;
@@ -408,7 +430,7 @@ void computeOffsets()
     vector<float> phases;
 
     Feed *f0, *f1;
-    float T = 2*PI/F_0;
+    float T = 2*PI/sig_freq;
 
     f0 = feeds.at(0);
 
@@ -484,8 +506,8 @@ float computePhaseDiff(Feed *f1, Feed *f2)
     ds1 = FFT_PHASE_BOUND/df1;
     ds2 = FFT_PHASE_BOUND/df2;
 
-    res1 = F_0/df1;
-    res2 = F_0/df2;
+    res1 = sig_freq/df1;
+    res2 = sig_freq/df2;
 
     // assess the points around resonance
 

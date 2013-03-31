@@ -21,9 +21,9 @@ namespace BODY{
 Point3f points[NUM_POINTS] =
 {
     Point3f(440, 440, 0),
-    Point3f(440, -440, 0),
+    Point3f(-440, 440, 0),
     Point3f(-440, -440, 0),
-    Point3f(-440, 440, 0)
+     Point3f(440, -440, 0)
 };
 }
 

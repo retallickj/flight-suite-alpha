@@ -44,9 +44,9 @@ const int LABEL_FONT = CV_FONT_HERSHEY_COMPLEX;
 const int LABEL_THICK = 1;
 const Scalar LABEL_COLOR = BLACK;
 
-const Scalar VLINE_COLOR = RED;
+const Scalar LL_COLOR = RED;
+const Scalar RR_COLOR = BLUE;
 const int VLINE_THICK = 3;
-
 
 enum STYLE{STEM, CROSS, CIRC, PLUS, LINE};
 
@@ -84,24 +84,27 @@ struct Plot{
     Point2d *ll_act; // lower left
     Point2d *rr_act; // upper right
 
+    Point2d *p_pnt;
+
     float xscale;
     float yscale;
 
     vector<struct Series> series;
+    vector<int*> hlines;
 };
 
 class PlotCore
 {
 public:
-    PlotCore(string winname, int width, int height, int *l1=0, bool cycleSeries=false);
+    PlotCore(string winname, int width, int height, bool cycleSeries=false);
     ~PlotCore();
 
-    void addPlot();
+    void addPlot(Point2d *p_pnt=0);
     void addSeries(int plot_index, vector<Point2d> *src, string title="", Scalar color=PCG::GREEN,\
                    PCG::STYLE style = PCG::STEM);
 
     void changePlot(int plot_index, bool showflag);
-    void shiftPlot(bool right, bool showflag);
+    int shiftPlot(bool right, bool showflag);
 
     void changeSeries(int series_index, bool showflag);
     void shiftSeries(bool right, bool showflag);
@@ -120,14 +123,14 @@ public:
     void emptyPlot(int plot_index);
     void emptyAllPlots();
 
-    void addVLine(int x, Scalar color = PCG::VLINE_COLOR, int thickness = PCG::VLINE_THICK);
+    void addVLine(int x, Scalar color = PCG::LL_COLOR, int thickness = PCG::VLINE_THICK);
     Point2d getPoint(int plot_index, int x, int y);
 
     void setLabels(string title, string xlabel, string ylabel);
 
-    void addHLine(int *y);
+    void addHLine(int plot_index, int *y);
 
-    int l1, l2;
+    void mouseCallback(int event, int x, int y, int flag, void* param);
 
 private:
 
@@ -145,9 +148,6 @@ private:
     string winname;
     string trackname;
 
-    Point2i *ll;
-    Point2i *rr;
-
     Point2i dims;
 
     int currentPlot;
@@ -156,9 +156,8 @@ private:
     bool cycleSeries;
     int* maxX;
 
-    int *p_l1;
-
-    vector<int*> hlines;
+    Point2i *ll;
+    Point2i *rr;
 
     vector<struct Plot*> plots;
 };

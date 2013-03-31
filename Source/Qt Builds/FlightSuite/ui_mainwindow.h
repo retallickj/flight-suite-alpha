@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Mar 27 20:23:30 2013
+** Created: Thu Mar 28 18:40:26 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -52,6 +52,10 @@ public:
     QLineEdit *vsync_line_out;
     QPushButton *vsync_pb_out;
     QPushButton *vsync_pb_run;
+    QHBoxLayout *horizontalLayout_28;
+    QLabel *label_27;
+    QLineEdit *vsync_line_freq;
+    QCheckBox *vsync_cb_freq;
     QWidget *camcal_tab;
     QStackedWidget *camcal_stack;
     QWidget *page;
@@ -214,7 +218,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(597, 476);
+        MainWindow->resize(597, 475);
         MainWindow->setMouseTracking(false);
         MainWindow->setWindowOpacity(0.9);
         centralWidget = new QWidget(MainWindow);
@@ -287,6 +291,31 @@ public:
 
 
         verticalLayout->addLayout(horizontalLayout);
+
+        horizontalLayout_28 = new QHBoxLayout();
+        horizontalLayout_28->setSpacing(6);
+        horizontalLayout_28->setObjectName(QString::fromUtf8("horizontalLayout_28"));
+        horizontalLayout_28->setContentsMargins(330, -1, -1, -1);
+        label_27 = new QLabel(layoutWidget);
+        label_27->setObjectName(QString::fromUtf8("label_27"));
+
+        horizontalLayout_28->addWidget(label_27);
+
+        vsync_line_freq = new QLineEdit(layoutWidget);
+        vsync_line_freq->setObjectName(QString::fromUtf8("vsync_line_freq"));
+
+        horizontalLayout_28->addWidget(vsync_line_freq);
+
+        vsync_cb_freq = new QCheckBox(layoutWidget);
+        vsync_cb_freq->setObjectName(QString::fromUtf8("vsync_cb_freq"));
+        vsync_cb_freq->setChecked(true);
+
+        horizontalLayout_28->addWidget(vsync_cb_freq);
+
+        horizontalLayout_28->setStretch(1, 1);
+        horizontalLayout_28->setStretch(2, 1);
+
+        verticalLayout->addLayout(horizontalLayout_28);
 
         tabWidget->addTab(vsync_tab, QString());
         camcal_tab = new QWidget();
@@ -1047,7 +1076,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(4);
+        tabWidget->setCurrentIndex(0);
         camcal_stack->setCurrentIndex(1);
         settings_stack->setCurrentIndex(0);
 
@@ -1063,6 +1092,8 @@ public:
         label->setText(QApplication::translate("MainWindow", "Write To:", 0, QApplication::UnicodeUTF8));
         vsync_pb_out->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         vsync_pb_run->setText(QApplication::translate("MainWindow", "Sync", 0, QApplication::UnicodeUTF8));
+        label_27->setText(QApplication::translate("MainWindow", "Freq:", 0, QApplication::UnicodeUTF8));
+        vsync_cb_freq->setText(QApplication::translate("MainWindow", "Store", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(vsync_tab), QApplication::translate("MainWindow", "Video Sync", 0, QApplication::UnicodeUTF8));
         camcal_pb_v2add->setText(QApplication::translate("MainWindow", "Add", 0, QApplication::UnicodeUTF8));
         camcal_pb_v2in->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));

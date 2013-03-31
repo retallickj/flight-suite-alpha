@@ -1,6 +1,6 @@
 #include "plotcore.h"
 
-PlotCore::PlotCore(string winname, int width, int height, int *l1, bool cycleSeries)
+PlotCore::PlotCore(string winname, int width, int height, bool cycleSeries)
 {
     this->winname = winname;
 
@@ -14,11 +14,6 @@ PlotCore::PlotCore(string winname, int width, int height, int *l1, bool cycleSer
     this->ll->y = (int) height*(1-PCG::PLOT_OFFSET);
     this->rr->x = (int) width*(1-PCG::PLOT_OFFSET);
     this->rr->y = (int) height*PCG::PLOT_OFFSET;
-
-    this->l1 = -1;
-    this->l2 = -1;
-
-    this->p_l1=l1;
 
     this->maxX = 0;
 
@@ -39,7 +34,7 @@ PlotCore::~PlotCore()
 }
 
 
-void PlotCore::addPlot()
+void PlotCore::addPlot(Point2d *p_pnt)
 {
     Plot *p = new struct Plot;
 
@@ -52,11 +47,13 @@ void PlotCore::addPlot()
     p->ll_act = new Point2d;
     p->rr_act = new Point2d;
 
-    p->ll_act->x = 1;
+    p->ll_act->x = 0;
     p->rr_act->x = -1;
 
     p->ll_act->y = 0;
     p->rr_act->y = 0;
+
+    p->p_pnt = p_pnt;
 
     this->plots.push_back(p);
 }
@@ -76,7 +73,7 @@ void PlotCore::changePlot(int plot_index, bool showflag)
         imshow(this->winname, this->plots.at(plot_index)->image);
 }
 
-void PlotCore::shiftPlot(bool right, bool showflag)
+int PlotCore::shiftPlot(bool right, bool showflag)
 {
     int maxindex = (int) this->plots.size()-1;
 
@@ -88,6 +85,8 @@ void PlotCore::shiftPlot(bool right, bool showflag)
         this->changePlot(maxindex, showflag);
     else
         this->changePlot(this->currentPlot + (right ? 1:-1), showflag);
+
+    return this->currentPlot;
 }
 
 void PlotCore::changeSeries(int series_index, bool showflag)
@@ -171,7 +170,7 @@ void PlotCore::show(vector<int*> *val, int maxVal, int* maxX, int maxX_Lim)
         createTrackbar(this->trackname,this->winname,maxX,maxX_Lim);
     }
 
-    setMouseCallback(this->winname, PCG::mouseCallback,(void *) this);
+    setMouseCallback(this->winname, PCG::mouseCallback ,(void *) this);
 }
 
 void PlotCore::update(int plot_index)
@@ -203,13 +202,19 @@ void PlotCore::updateAll(bool showflag)
 
     // draw shared vlines
 
-    if(this->l1 >= 0)
+    Plot *p = this->plots.at(currentPlot);
+    int x;
+    Point2d *pnt = p->p_pnt;
+    if(pnt != 0)
     {
-        this->addVLine(this->l1);
+        x = this->ll->x + (pnt->x - p->ll_act->x)/p->xscale;
+        this->addVLine(x, PCG::LL_COLOR);
     }
-    if(this->l2 >= 0)
+
+    if(pnt != 0)
     {
-        this->addVLine(this->l2);
+        x = this->ll->x + (pnt->y - p->ll_act->x)/p->xscale;
+        this->addVLine(x, PCG::RR_COLOR);
     }
 
     // draw hlines
@@ -349,9 +354,9 @@ void PlotCore::setLabels(string title, string xlabel, string ylabel)
     }
 }
 
-void PlotCore::addHLine(int *y)
+void PlotCore::addHLine(int plot_index, int *y)
 {
-    this->hlines.push_back(y);
+    this->plots.at(plot_index)->hlines.push_back(y);
 }
 
 void PlotCore::drawBoundBox(int plot_index)
@@ -614,9 +619,9 @@ void PlotCore::drawHLines()
     {
         p = this->plots.at(i);
 
-        for(uInt j=0; j < this->hlines.size(); j++)
+        for(uInt j=0; j < p->hlines.size(); j++)
         {
-            line_y = *this->hlines.at(j);
+            line_y = *p->hlines.at(j);
 
             if(line_y <= p->ll_act->y || line_y >= p->rr_act->y)
                 continue;
@@ -710,29 +715,43 @@ void PlotCore::checkBounds(Plot *p, struct Series *ser)
 }
 
 
-void PCG::mouseCallback(int event, int x, int y, int flag, void *param)
+void PlotCore::mouseCallback(int event, int x, int y, int flag, void *param)
 {
     y = flag;
     flag = y;
+    double temp;
 
     PlotCore *pc = (PlotCore *) param;
+    Plot *p = pc->plots.at(currentPlot);
+    Point2d *pnt = p->p_pnt;
 
     switch(event)
     {
     case EVENT_LBUTTONDOWN:
         cout << "LBD" << endl;
-        pc->l1 = x;
-        *pc->p_l1 = (x-pc->ll)*pc->plots.at(pc->currentPlot)->xscale;
+        if(pnt != 0)
+            pnt->x = p->ll_act->x + (x-pc->ll->x)*p->xscale;
         break;
     case EVENT_LBUTTONUP:
         cout << "LBU" << endl;
-        pc->l2 = x;
-        // assert order
-        if(pc->l1 > x)
+        if(pnt != 0)
         {
-            pc->l2 = pc->l1;
-            pc->l1 = x;
+            pnt->y = p->ll_act->x + (x-pc->ll->x)*p->xscale;
+            // assert ordering
+            if(pnt != 0 && pnt->x > pnt->y)
+            {
+                temp = pnt->x;
+                pnt->x = pnt->y;
+                pnt->y = temp;
+            }
         }
         break;
     }
+}
+
+void ::PCG::mouseCallback(int event, int x, int y, int flag, void *param)
+{
+    PlotCore *pc = (PlotCore *) param;
+
+    pc->mouseCallback(event, x, y, flag, param);
 }

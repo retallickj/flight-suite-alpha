@@ -103,6 +103,8 @@ void MainWindow::setDefaults()
     ui->trackpack_path_line->insert(settings->value("path/trackpack").toString());
     ui->triangpack_path_line->insert(settings->value("path/triangpack").toString());
     ui->statepack_path_line->insert(settings->value("path/statepack").toString());
+
+    ui->vsync_line_freq->insert(settings->value("vsync/freq").toString());
 }
 
 
@@ -131,7 +133,23 @@ void MainWindow::on_vsync_pb_in_clicked()
 
 void MainWindow::on_vsync_pb_out_clicked()
 {
-    getDir(ui->vsync_line_out, ui->videopack_path_line->text());
+    getFile(ui->vsync_line_out, ui->videopack_path_line->text());
+}
+
+void MainWindow::on_vsync_line_freq_editingFinished()
+{
+    if(ui->vsync_cb_freq->checkState())
+    {
+        settings->setValue("vsync/freq", ui->vsync_line_freq->text());
+    }
+}
+
+void MainWindow::on_vsync_cb_freq_clicked()
+{
+    if(ui->vsync_cb_freq->checkState())
+    {
+        this->on_vsync_exec_line_editingFinished();
+    }
 }
 
 void MainWindow::on_vsync_pb_run_clicked()
@@ -148,7 +166,12 @@ void MainWindow::on_vsync_pb_run_clicked()
 
     QString write_path = ui->vsync_line_out->text();
 
+    QString freq = ui->vsync_line_freq->text();
+    if(freq.isEmpty())
+        return;
+
     args.append(write_path);
+    args.append(freq);
     args.append(path_string.split("\n"));
     status = qproc->execute(exec_path, args);
 
