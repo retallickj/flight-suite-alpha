@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Mar 28 18:40:26 2013
+** Created: Sun Mar 31 14:13:52 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -218,7 +218,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(597, 475);
+        MainWindow->resize(591, 471);
         MainWindow->setMouseTracking(false);
         MainWindow->setWindowOpacity(0.9);
         centralWidget = new QWidget(MainWindow);
@@ -1065,7 +1065,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 597, 25));
+        menuBar->setGeometry(QRect(0, 0, 591, 25));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -1120,9 +1120,9 @@ public:
         track_ckbx->setText(QApplication::translate("MainWindow", "From Pack", 0, QApplication::UnicodeUTF8));
         track_pb_run->setText(QApplication::translate("MainWindow", "Track", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(track_tab), QApplication::translate("MainWindow", "Tracking", 0, QApplication::UnicodeUTF8));
-        label_5->setText(QApplication::translate("MainWindow", "Track Pack Dir: ", 0, QApplication::UnicodeUTF8));
+        label_5->setText(QApplication::translate("MainWindow", "Track Pack: ", 0, QApplication::UnicodeUTF8));
         triang_pb_tpin->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
-        label_6->setText(QApplication::translate("MainWindow", "Camera Mats:  ", 0, QApplication::UnicodeUTF8));
+        label_6->setText(QApplication::translate("MainWindow", "Camera Mat File:  ", 0, QApplication::UnicodeUTF8));
         traing_pb_cmin->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Write To:", 0, QApplication::UnicodeUTF8));
         triang_pb_out->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));

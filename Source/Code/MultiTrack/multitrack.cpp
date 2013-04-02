@@ -15,7 +15,7 @@ void drawCross(Mat& image, Point pos, Scalar color)
 void genHSVbounds(int H, int &S_low, int &S_high, int &V_low, int &V_high)
 {
     S_low=S_LOW;
-    V_low=V_LOW;
+    V_low=V_LOW;s
     S_high=S_MAX;
     V_high=V_MAX;
 }
@@ -118,7 +118,7 @@ bool MultiTrack::advance()
             this->currentFrame = temp_frame;
             this->currentTime = this->cap.get(CV_CAP_PROP_POS_MSEC);
             if(this->offsetTime >= 0)
-                this->currentTime -= this->offsetTime;
+                this->currentTime += this->offsetTime;
         }
     }
 
@@ -425,4 +425,9 @@ void MultiTrack::showColor()
     }
 
 
+}
+
+int MultiTrack::numPoints()
+{
+    return this->p_rects.size();
 }

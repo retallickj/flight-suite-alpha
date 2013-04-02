@@ -6,8 +6,9 @@
 
 #define RECT_MIN 20
 
-#define PACK_ARG 1
+#define PACK_FLAG_ARG 1
 #define WRITE_ARG 2
+#define PACK_ARG 3
 #define FEED_ARG_OFFSET 2
 
 #define MEAN_WIDTH 5
@@ -36,6 +37,7 @@ string write_folder;
 bool fromPack;
 
 int run_fps = -1;
+float run_speed = 1;
 
 
 // *** Function Declarations ***
@@ -45,6 +47,7 @@ bool initiate(int argc, char** argv);
 bool cleanup();
 void extractVPack(string readpath);
 Scalar getColor(Mat* image, Point center) ;
+bool writeHandler();
 
 
 
@@ -75,7 +78,7 @@ int main(int argc, char** argv)
             if(plays.at(i)) kill = false;
         }
 
-        c = (char) waitKey(1000/run_fps);
+        c = (char) waitKey(1000/(run_fps*run_speed));
 
         switch(c)
         {
@@ -109,9 +112,20 @@ int main(int argc, char** argv)
 
             for(int i = 0; i < num_feeds; i++)
             {
-                savename = write_folder + "/feed" + toStr(i) + ".xml";
+                savename = write_folder + "/feed_" + toStr(i) + ".xml";
                 mts.at(i)->exportAll(savename);
             }
+
+            // write handler
+
+            if(!writeHandler())
+                return -1;
+            break;
+        case 'f':
+            run_speed++;
+            break;
+        case 'd':
+            run_speed--;
             break;
         default:
             break;
@@ -250,7 +264,7 @@ bool initiate(int argc, char** argv)
 
     // video pack or video feeds
 
-    if(strcmp(argv[1],"1") == 0)  // Video pack
+    if(strcmp(argv[PACK_FLAG_ARG],"1") == 0)  // Video pack
     {
         // extract filenames, and offsets
         extractVPack(argv[PACK_ARG]);
@@ -351,4 +365,41 @@ Scalar getColor(Mat *image, Point center)
     cropped = 0;
 
     return color;
+}
+
+bool writeHandler()
+{
+    string filepath = write_folder + "/handler.xml";
+
+    FileStorage fs(filepath, FileStorage::WRITE);
+
+    if(!fs.isOpened())
+    {
+        cerr << "Failed to open file..." << filepath;
+        return false;
+    }
+
+    string num_feeds_str = "num_feeds";
+    string num_points_str = "num_points";
+
+    int num_feeds = mts.size();
+    int num_points = mts.at(0)->numPoints();
+
+    fs << num_feeds_str << num_feeds;
+    fs << num_points_str << num_points;
+
+    string feed_path_str;
+    string feed_path;
+
+    for(int i=0; i < num_feeds; i++)
+    {
+        feed_path_str = "feed_path_" + toStr(i);
+        feed_path = write_folder + "/feed_" + toStr(i) + ".xml";
+
+        fs << feed_path_str << feed_path;
+    }
+
+    fs.release();
+
+    return true;
 }

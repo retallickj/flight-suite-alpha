@@ -13,8 +13,8 @@
 #define H_MAX 180
 
 #define H_VAR 3
-#define S_LOW 50
-#define V_LOW 24
+#define S_LOW 180
+#define V_LOW 180
 #define S_MAX 255
 #define V_MAX 255
 
@@ -86,6 +86,8 @@ public:
     void setOffset(double offset);
 
     void exportAll(string filename);
+
+    int numPoints();
 
     Scalar *show_color;
 

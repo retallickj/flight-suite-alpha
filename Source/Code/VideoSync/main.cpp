@@ -458,6 +458,7 @@ void computeOffsets()
         N1 = f1->getSigLog()->size();
 
         offset = f0->getSigLog()->at(N-1).x - f1->getSigLog()->at(N1-1).x;
+        cout << "coarse offset: " << offset << endl;
         offset -= T*phases.at(i-1)/(2*PI);
 
         offsets.push_back(offset);

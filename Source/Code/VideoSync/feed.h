@@ -45,7 +45,7 @@
 
 #define START_PAUSE 100
 
-#define FFT_PHASE_BOUND 1
+#define FFT_PHASE_BOUND .5
 
 #define MIN_SIG_SIZE 20
 

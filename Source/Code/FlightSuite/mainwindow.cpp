@@ -341,7 +341,7 @@ void MainWindow::on_track_pb_run_clicked()
 
 void MainWindow::on_triang_pb_tpin_clicked()
 {
-    getDir(ui->triang_line_tpin, ui->trackpack_path_line->text());
+    getFile(ui->triang_line_tpin, ui->trackpack_path_line->text());
 }
 
 void MainWindow::on_traing_pb_cmin_clicked()
@@ -358,7 +358,15 @@ void MainWindow::on_triang_pb_run_clicked()
 {
     // run Triangulation code
 
-    //QString exec_path = settings->value("exec/triang").toString();
+    QString exec_path = settings->value("exec/triang").toString();
+    QStringList args;
+
+    QString write_path = ui->triang_line_out->text();
+
+    if(write_path.isEmpty())
+        write_path = "./output.xml";
+
+
 }
 
 
@@ -394,7 +402,7 @@ void MainWindow::on_proc_pb_run_clicked()
     QString write_path;
 
     if(ui->proc_line_out->text().isEmpty())
-        write_path = "./output";
+        write_path = "./output.xml";
     else
         write_path = ui->proc_line_out->text();
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>475</height>
+    <width>591</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="mouseTracking">
@@ -569,7 +569,7 @@
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>Track Pack Dir: </string>
+          <string>Track Pack: </string>
          </property>
         </widget>
        </item>
@@ -598,7 +598,7 @@
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Camera Mats:  </string>
+          <string>Camera Mat File:  </string>
          </property>
         </widget>
        </item>
@@ -1173,7 +1173,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>597</width>
+     <width>591</width>
      <height>25</height>
     </rect>
    </property>

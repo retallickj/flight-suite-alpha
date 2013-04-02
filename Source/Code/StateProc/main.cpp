@@ -18,12 +18,21 @@ using namespace cv;
 
 namespace BODY{
 
+//Point3f points[NUM_POINTS] =
+//{
+//    Point3f(440, 440, 0),
+//    Point3f(-440, 440, 0),
+//    Point3f(-440, -440, 0),
+//     Point3f(440, -440, 0)
+//};
+//}
+
 Point3f points[NUM_POINTS] =
 {
-    Point3f(440, 440, 0),
-    Point3f(-440, 440, 0),
-    Point3f(-440, -440, 0),
-     Point3f(440, -440, 0)
+    Point3f(1, 1, 0),
+    Point3f(-1, 1, 0),
+    Point3f(-1, -1, 0),
+     Point3f(1, -1, 0)
 };
 }
 
@@ -56,6 +65,7 @@ Mat crossMat(Mat A, Mat B);
 Mat getAtt(Mat R);
 void toXML();
 void toCSV();
+void scaleShape();
 
 
 // *** AUX FUNCTIONS ***
@@ -79,6 +89,10 @@ int main(int argc, char** argv)
 
     if(!initialize(argc, argv))
         return -1;
+
+    // scale the shape
+
+    scaleShape();
 
     // compute average z direction
 
@@ -252,9 +266,9 @@ void extract(Mat source, Mat dest, Mat *trans, Mat *rot, bool zero)
 //    //cout << "Trans: " << *trans << endl;
 
 //    cout << "\n\n\nSrc: \n" << src << endl;
-    cout << "\n\n\nDst: \n" << dst << endl;
-    cout << "Rot: \n" << *rot << endl;
-    cout << "Back: \n" << ((*rot)*src.t()).t() << endl;
+//    cout << "\n\n\nDst: \n" << dst << endl;
+//    cout << "Rot: \n" << *rot << endl;
+//    cout << "Back: \n" << ((*rot)*src.t()).t() << endl;
 }
 
 bool readTriang()
@@ -326,6 +340,7 @@ Mat compAxes(Mat &zs)
     Mat axes = Mat::zeros(3,3,CV_32F);
 
     reduce(zs,axes.row(2),0,CV_REDUCE_AVG,CV_32F);
+    axes.row(2) = axes.row(2)/lenMat(axes.row(2));
 
     // take the cross product of the z with camera x axis to get y
 
@@ -419,4 +434,52 @@ void toCSV()
 
         file << endl;
     }
+}
+
+void scaleShape()
+{
+    // compute sum of point radii in current shape
+
+    double r_shape = 0;
+    int N = shape.rows;
+
+    for(int i=0; i < N;i++)
+    {
+        r_shape += lenMat(shape.row(i));
+    }
+
+    // compute average sum of point radii for flight positions
+
+    double r_flight = 0;
+    Mat temp(N,3,CV_32F);
+    Mat cent;
+
+    for(unsigned int i=0; i < pos.size(); i++)
+    {
+        // load position
+
+        pos.at(i).copyTo(temp);
+
+        // compute centroid
+
+        reduce(temp, cent, 0, CV_REDUCE_AVG, CV_32F);
+
+        // translate to zero and compute radii
+
+        for(int j=0; j < N; j++)
+        {
+            r_flight += lenMat(temp.row(j)-cent);
+        }
+    }
+
+    // normalize
+
+    r_flight /= pos.size();
+
+    float scale = r_flight/r_shape;
+
+    shape = shape*scale;
+
+    cout << "Shape scale: " << scale << endl;
+
 }
