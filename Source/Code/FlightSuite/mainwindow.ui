@@ -33,7 +33,7 @@
      <bool>true</bool>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>6</number>
     </property>
     <widget class="QWidget" name="vsync_tab">
      <attribute name="title">
@@ -802,6 +802,55 @@
      <attribute name="title">
       <string>Analysis</string>
      </attribute>
+     <widget class="Line" name="line_6">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>561</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QWidget" name="">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>20</y>
+        <width>561</width>
+        <height>29</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_30">
+       <item>
+        <widget class="QLabel" name="label_30">
+         <property name="text">
+          <string>Filename: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="plot_line"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="plot_pb">
+         <property name="text">
+          <string>...</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="plot_run">
+         <property name="text">
+          <string>Plot</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
     <widget class="QWidget" name="settings_tab">
      <attribute name="title">
@@ -959,6 +1008,27 @@
            </item>
            <item>
             <widget class="QPushButton" name="asis_exec_pb">
+             <property name="text">
+              <string>...</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_31" stretch="1,5,1">
+           <item>
+            <widget class="QLabel" name="label_31">
+             <property name="text">
+              <string>Plot:                  </string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="plot_exec_line"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="plot_exec_pb">
              <property name="text">
               <string>...</string>
              </property>

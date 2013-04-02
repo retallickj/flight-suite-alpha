@@ -1,7 +1,10 @@
+#!/usr/bin/python
+
 from matplotlib import pylab as plt
 import mpl_toolkits.mplot3d.axes3d as p3
+import sys
 
-filepath = "./test1.txt"
+print "starting"
 
 def loadFile(filename):
 
@@ -26,8 +29,10 @@ def loadFile(filename):
 
 	return yaw, pitch, roll, x, y, z
 
-
-def run():
+if sys.argc < 2:
+	print "insufficient arguments..."
+else:
+	filepath = sys.argv[1]
 
 	yaw, pitch, roll, x, y, z = loadFile(filepath)
 

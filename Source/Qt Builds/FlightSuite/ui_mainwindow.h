@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Mar 31 14:13:52 2013
+** Created: Mon Apr 1 18:02:59 2013
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -150,6 +150,13 @@ public:
     QLabel *label_9;
     QCheckBox *proc_filter1_chbx;
     QWidget *asis_tab;
+    QFrame *line_6;
+    QWidget *widget;
+    QHBoxLayout *horizontalLayout_30;
+    QLabel *label_30;
+    QLineEdit *plot_line;
+    QPushButton *plot_pb;
+    QPushButton *plot_run;
     QWidget *settings_tab;
     QStackedWidget *settings_stack;
     QWidget *page_3;
@@ -179,6 +186,10 @@ public:
     QLabel *label_20;
     QLineEdit *asis_exec_line;
     QPushButton *asis_exec_pb;
+    QHBoxLayout *horizontalLayout_31;
+    QLabel *label_31;
+    QLineEdit *plot_exec_line;
+    QPushButton *plot_exec_pb;
     QLabel *label_13;
     QCommandLinkButton *settings_clb_1;
     QWidget *page_4;
@@ -744,6 +755,39 @@ public:
         tabWidget->addTab(proc_tab, QString());
         asis_tab = new QWidget();
         asis_tab->setObjectName(QString::fromUtf8("asis_tab"));
+        line_6 = new QFrame(asis_tab);
+        line_6->setObjectName(QString::fromUtf8("line_6"));
+        line_6->setGeometry(QRect(10, 60, 561, 21));
+        line_6->setFrameShape(QFrame::HLine);
+        line_6->setFrameShadow(QFrame::Sunken);
+        widget = new QWidget(asis_tab);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        widget->setGeometry(QRect(10, 20, 561, 29));
+        horizontalLayout_30 = new QHBoxLayout(widget);
+        horizontalLayout_30->setSpacing(6);
+        horizontalLayout_30->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_30->setObjectName(QString::fromUtf8("horizontalLayout_30"));
+        horizontalLayout_30->setContentsMargins(0, 0, 0, 0);
+        label_30 = new QLabel(widget);
+        label_30->setObjectName(QString::fromUtf8("label_30"));
+
+        horizontalLayout_30->addWidget(label_30);
+
+        plot_line = new QLineEdit(widget);
+        plot_line->setObjectName(QString::fromUtf8("plot_line"));
+
+        horizontalLayout_30->addWidget(plot_line);
+
+        plot_pb = new QPushButton(widget);
+        plot_pb->setObjectName(QString::fromUtf8("plot_pb"));
+
+        horizontalLayout_30->addWidget(plot_pb);
+
+        plot_run = new QPushButton(widget);
+        plot_run->setObjectName(QString::fromUtf8("plot_run"));
+
+        horizontalLayout_30->addWidget(plot_run);
+
         tabWidget->addTab(asis_tab, QString());
         settings_tab = new QWidget();
         settings_tab->setObjectName(QString::fromUtf8("settings_tab"));
@@ -909,6 +953,30 @@ public:
         horizontalLayout_22->setStretch(2, 1);
 
         verticalLayout_2->addLayout(horizontalLayout_22);
+
+        horizontalLayout_31 = new QHBoxLayout();
+        horizontalLayout_31->setSpacing(6);
+        horizontalLayout_31->setObjectName(QString::fromUtf8("horizontalLayout_31"));
+        label_31 = new QLabel(layoutWidget_11);
+        label_31->setObjectName(QString::fromUtf8("label_31"));
+
+        horizontalLayout_31->addWidget(label_31);
+
+        plot_exec_line = new QLineEdit(layoutWidget_11);
+        plot_exec_line->setObjectName(QString::fromUtf8("plot_exec_line"));
+
+        horizontalLayout_31->addWidget(plot_exec_line);
+
+        plot_exec_pb = new QPushButton(layoutWidget_11);
+        plot_exec_pb->setObjectName(QString::fromUtf8("plot_exec_pb"));
+
+        horizontalLayout_31->addWidget(plot_exec_pb);
+
+        horizontalLayout_31->setStretch(0, 1);
+        horizontalLayout_31->setStretch(1, 5);
+        horizontalLayout_31->setStretch(2, 1);
+
+        verticalLayout_2->addLayout(horizontalLayout_31);
 
         label_13 = new QLabel(page_3);
         label_13->setObjectName(QString::fromUtf8("label_13"));
@@ -1076,7 +1144,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(6);
         camcal_stack->setCurrentIndex(1);
         settings_stack->setCurrentIndex(0);
 
@@ -1136,6 +1204,9 @@ public:
         label_9->setText(QApplication::translate("MainWindow", "Filtering:", 0, QApplication::UnicodeUTF8));
         proc_filter1_chbx->setText(QApplication::translate("MainWindow", "Kalman", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(proc_tab), QApplication::translate("MainWindow", "Processing", 0, QApplication::UnicodeUTF8));
+        label_30->setText(QApplication::translate("MainWindow", "Filename: ", 0, QApplication::UnicodeUTF8));
+        plot_pb->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
+        plot_run->setText(QApplication::translate("MainWindow", "Plot", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(asis_tab), QApplication::translate("MainWindow", "Analysis", 0, QApplication::UnicodeUTF8));
         label_21->setText(QApplication::translate("MainWindow", "Video Sync:    ", 0, QApplication::UnicodeUTF8));
         vsync_exec_pb->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
@@ -1149,6 +1220,8 @@ public:
         proc_exec_pb->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         label_20->setText(QApplication::translate("MainWindow", "Analysis:          ", 0, QApplication::UnicodeUTF8));
         asis_exec_pb->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
+        label_31->setText(QApplication::translate("MainWindow", "Plot:                  ", 0, QApplication::UnicodeUTF8));
+        plot_exec_pb->setText(QApplication::translate("MainWindow", "...", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Executable Paths", 0, QApplication::UnicodeUTF8));
         settings_clb_1->setText(QApplication::translate("MainWindow", "Next", 0, QApplication::UnicodeUTF8));
         settings_clb_2->setText(QApplication::translate("MainWindow", "Prev", 0, QApplication::UnicodeUTF8));

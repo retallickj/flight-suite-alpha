@@ -168,6 +168,15 @@ private slots:
 
     void on_vsync_cb_freq_clicked();
 
+
+    void on_plot_pb_clicked();
+
+    void on_plot_run_clicked();
+
+    void on_plot_exec_pb_clicked();
+
+    void on_plot_exec_line_editingFinished();
+
 private:
 
     // helper functions for clean build

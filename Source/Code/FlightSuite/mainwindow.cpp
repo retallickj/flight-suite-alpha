@@ -94,6 +94,7 @@ void MainWindow::setDefaults()
     ui->triang_exec_line->insert(settings->value("exec/triang").toString());
     ui->proc_exec_line->insert(settings->value("exec/proc").toString());
     ui->asis_exec_line->insert(settings->value("exec/asis").toString());
+    ui->plot_exec_line->insert(settings->value("exec/plot").toString());
 
     // directory paths
 
@@ -474,6 +475,12 @@ void MainWindow::on_asis_exec_pb_clicked()
     this->on_asis_exec_line_editingFinished();
 }
 
+void MainWindow::on_plot_exec_pb_clicked()
+{
+    getFile(ui->plot_exec_line, EXEC_DIR_PATH);
+    this->on_plot_exec_line_editingFinished();
+}
+
 
 void MainWindow::on_vsync_exec_line_editingFinished()
 {
@@ -504,6 +511,12 @@ void MainWindow::on_asis_exec_line_editingFinished()
 {
     settings->setValue("exec/asis",ui->asis_exec_line->text());
 }
+
+void MainWindow::on_plot_exec_line_editingFinished()
+{
+    settings->setValue("exec/plot",ui->plot_exec_line->text());
+}
+
 
 
 
@@ -558,6 +571,8 @@ void MainWindow::on_statepack_path_pb_clicked()
     this->on_statepack_path_line_editingFinished();
 }
 
+
+
 void MainWindow::on_video_path_line_editingFinished()
 {
     settings->setValue("path/video",ui->video_path_line->text());
@@ -586,4 +601,35 @@ void MainWindow::on_triangpack_path_line_editingFinished()
 void MainWindow::on_statepack_path_line_editingFinished()
 {
     settings->setValue("path/statepack",ui->statepack_path_line->text());
+}
+
+
+
+
+// Analysis Tab
+
+
+void MainWindow::on_plot_pb_clicked()
+{
+    getFile(ui->plot_line, ui->statepack_path_line->text());
+}
+
+void MainWindow::on_plot_run_clicked()
+{
+    QString exec_path = ui->plot_exec_line->text();
+    QStringList args;
+
+    if(ui->plot_line->text().isEmpty())
+        return;
+
+    QString file_path = ui->plot_line->text();
+
+    args.append(exec_path);
+    args.append(file_path);
+
+    int status = qproc->execute("python",args);
+
+    std::cout << "Execution Status: " << status << std::endl;
+
+
 }
