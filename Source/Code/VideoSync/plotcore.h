@@ -28,7 +28,7 @@ const int STEM_WIDTH = 1;
 const int CIRC_RAD = 2;
 
 const float AXIS_DASH = 5;
-const int DASH_WIDTH = 1;
+const int DASH_WIDTH = 4;
 
 const float PLOT_OFFSET = .1;
 

@@ -46,6 +46,7 @@ Mat shape;
 Mat c_axes;
 
 vector<Mat> pos;
+vector<double> timestamps;
 
 string triang_path;
 string write_path;
@@ -312,6 +313,9 @@ bool readTriang()
         }
 
         fs[i]["point"] >> points[i];
+
+        if(i==0)
+            fs[0]["timeStamps"] >> timestamps;
     }
 
     // load points into pos matrix
@@ -404,6 +408,8 @@ void toXML()
 
     // write data
 
+    fs << "timeStamps" << timestamps;
+
     fs << "yaw" << attitude.col(0);
     fs << "pitch" << attitude.col(0);
     fs << "roll" << attitude.col(0);
@@ -422,6 +428,8 @@ void toCSV()
 
     for(int i=0; i < attitude.rows; i++)
     {
+        file << timestamps.at(i) << '\t';
+
         for(int j=0; j<3; j++)
         {
             file << attitude.at<float>(i,j) << '\t';

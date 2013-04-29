@@ -6,9 +6,11 @@ import sys
 
 print "starting"
 
-def loadFile(filename):
+def loadFile(filepath):
 
 	fp = open(filepath);
+
+	timestamps = []
 
 	yaw = []
 	pitch = []
@@ -20,27 +22,28 @@ def loadFile(filename):
 
 	for line in fp:
 		vals = line.split('\t')
-		yaw.append(float(vals[0]))
-		pitch.append(float(vals[1]))
-		roll.append(float(vals[2]))
-		x.append(float(vals[3]))
-		y.append(float(vals[4]))
-		z.append(float(vals[5]))
+		timestamps.append(float(vals[0]))
+		yaw.append(float(vals[1]))
+		pitch.append(float(vals[2]))
+		roll.append(float(vals[3]))
+		x.append(float(vals[4]))
+		y.append(float(vals[5]))
+		z.append(float(vals[6]))
 
-	return yaw, pitch, roll, x, y, z
+	return timestamps, yaw, pitch, roll, x, y, z
 
 if len(sys.argv) < 2:
 	print "insufficient arguments..."
 else:
 	filepath = sys.argv[1]
 
-	yaw, pitch, roll, x, y, z = loadFile(filepath)
+	timestamps, yaw, pitch, roll, x, y, z = loadFile(filepath)
 
-	plt.plot(x, 'ro')
-	plt.plot(y, 'bo')
-	plt.plot(z, 'go')
+	plt.plot(timestamps, x, 'ro')
+	plt.plot(timestamps, y, 'bo')
+	plt.plot(timestamps, z, 'go')
 
-	plt.xlabel("Frame")
+	plt.xlabel("Time (ms)")
 	plt.ylabel("Position (mm)")
 
 	plt.legend(["X", "Y", "Z"])
@@ -49,11 +52,11 @@ else:
 
 	plt.show()
 
-	plt.plot(yaw, 'ro')
-	plt.plot(pitch, 'bo')
-	plt.plot(roll, 'go')
+	plt.plot(timestamps, yaw, 'ro')
+	plt.plot(timestamps, pitch, 'bo')
+	plt.plot(timestamps, roll, 'go')
 
-	plt.xlabel("Frame")
+	plt.xlabel("Time (ms)")
 	plt.ylabel("Angle (rad)")
 
 	plt.legend(["yaw", "pitch", "roll"])
